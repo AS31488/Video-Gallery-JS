@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player with Playlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    background-color:#f0f0f0;
+}
+
+.video-container{
+    width:640px;
+    border:1px solid #ccc;
+    background-color:#333;
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+.video{
+    width:100%;
+    height:360px;
+    background:url('dragon-age-veilguard-eacom-coming-soon-16x9.jpg.adapt.crop191x100.1200w.jpg') no-repeat center center;
+    background-size:cover;
+}
+
+.controls{
+    display:flex;
+    align-items:center;
+    padding:5px;
+    background-color:#444;
+}
+
+.controls .play, .controls .pause, .controls .volume, .controls.fullscreen{
+ color:white;
+ margin:0 5px;
+ cursor:pointer;   
+}
+
+.controls .progress-bar{
+    flex-grow:1;
+    height:20px;
+    margin:0 10px;
+    background-color:#ccc;
+    border-radius:3px;
+}
+
+.footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:5px;
+    background-color:#444;
+    color:white;
+    font-family:Arial,sans-serif;
+    font-size:12px;
+}
+
+.footer a{
+    color:#00aaff;
+    text-decoration:none;
+}
+
+.playlist{
+    background-color:#333;
+    color:white;
+    padding:10px;
+    list-style:none;
+    margin:0;
+}
+
+.playlist li{
+    padding:5px;
+    cursor:pointer;
+}
+
+.playlist li:hover{
+    background-color:#555;
+}
+  </style>
+</head>
+<body>
+   <div class="video-container">
+    <video id="video" class="video" width="640" height="360" controls>
+        <source src="Videos/Dragon Age™_ The Veilguard _ Blighted Dragon Gameplay Trailer.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="controls">
+        <i class="fas fa-play play" id="play"></i>
+        <i class="fas fa-pause pause" id="pause" style="display:none;"></i>
+        <div class="progress-bar" id="progress-bar"></div>
+        <i class="fas fa-volume-up volume" id="volume"></i>
+        <i class="fas fa-plus plus" id="add"></i>
+        <i class="fas fa-expand fullscreen" id="fullscreen"></i>
+    </div>
+    <div class="footer">
+        <span><a href="https://siftd.net">@ Adam Inc.</a></span>
+    </div>
+    <ul class="playlist" id="playlist">
+        <li data-src="Videos/Dragon Age™_ The Veilguard _ Blighted Dragon Gameplay Trailer.mp4">Dragon Age Veilguard</li>
+        <li data-src="Videos/Black Ops 6 - Gameplay Reveal Trailer.mp4">Call Of Duty:Black Ops 6</li>
+        <li data-src="Videos/Grand Theft Auto VI Trailer 1.mp4">Grand Theft Auto VI</li>
+        <li data-src="Videos/DOOM_ The Dark Ages _ Official Trailer 1 (4K) _ Coming 2025.mp4">DOOM:The Dark Ages</li>
+        <li data-src="Videos/Ghost of Yōtei - Announce Trailer _ PS5 Games.mp4">Ghost Of Yotai</li>
+        <li data-src="Videos/Avowed Story Trailer.mp4">Avowed</li>
+        <li data-src="Videos/Fable Official Trailer _ Xbox Games Showcase 2024.mp4">Fable</li>
+        <li data-src="Videos/Gears of War_ E-Day _ Official Announce Trailer (In-Engine) - Xbox Games Showcase 2024.mp4">Gears of War:E-Day</li>
+        <li data-src="Videos/Death Stranding 2 On The Beach - State of Play Announce Trailer _ PS5 Games.mp4">Death Stranding 2:On The Beach</li>
+        <li data-src="Videos/Judas - Story Trailer _ PS5 Games.mp4">Judas</li>
+    </ul>
+    </div>
+  <script>
+const video = document.getElementById('video');
+const playButton = document.getElementById('play');
+const pauseButton = document.getElementById('pause');
+const progressBar = document.getElementById('progress-bar');
+const volumeButton = document.getElementById('volume');
+const fullscreenButton = document.getElementById('fullscreen');
+const playlist = document.getElementById('playlist');
+const playlistItems = playlist.getElementsByTagName('li');
+
+playButton.addEventListener('click', ()=>{
+    video.play();
+    playButton.style.display = 'none';
+    pauseButton.style.display = 'inline';
+});
+
+pauseButton.addEventListener('click', () => {
+    video.pause();
+    playButton.style.display = 'inline';
+    pauseButton.style.display = 'none';
+});
+
+video.addEventListener('timeupdate', () =>{
+    const progress = (video.currentTime / video.duration) * 100;
+    progressBar.style.width = progress + '%';
+});
+
+volumeButton.addEventListener('click', () => {
+    video.muted = !video.muted;
+    volumeButton.classList.toggle('fa-volume-up');
+    volumeButton.classList.toggle('fa-volume-mute');
+});
+
+fullscreenButton.addEventListener('click',() =>{
+    if(video.requestFullscreen) {
+       video.requestFullscreen();
+    } else if(video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+    } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) {
+      video.msRequestFullscreen();
+    }
+    });
+
+for (let item of playlistItems) {
+    item.addEventListener('click', () => {
+        video.src = item.getAttribute('data-src');
+        video.play();
+        playButton.style.display = 'none';
+        pauseButton.style.display = 'inline';
+    });
+}
+  </script>
+</body>
+</html>
